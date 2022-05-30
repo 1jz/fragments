@@ -14,8 +14,6 @@ const pino = require('pino-http')({
     logger,
 });
 
-const unneededVariable = 'This variable is never used';
-
 // Create an express app instance we can use to attach middleware and HTTP routes
 const app = express();
 
