@@ -1,17 +1,18 @@
 // tests/unit/response.test.js
 
+const hsc = require('http-status-codes');
 const { createErrorResponse, createSuccessResponse } = require('../../src/response');
 
 // Define (i.e., name) the set of tests we're about to do
 describe('API Responses', () => {
     // Write a test for calling createErrorResponse()
     test('createErrorResponse()', () => {
-        const errorResponse = createErrorResponse(404, 'not found');
+        const errorResponse = createErrorResponse(hsc.StatusCodes.NOT_FOUND, 'not found');
         // Expect the result to look like the following
         expect(errorResponse).toEqual({
             status: 'error',
             error: {
-                code: 404,
+                code: hsc.StatusCodes.NOT_FOUND,
                 message: 'not found',
             },
         });

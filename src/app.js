@@ -5,8 +5,11 @@ const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
 const passport = require('passport');
+const hsc = require('http-status-codes');
 
 const authorization = require('./authorization');
+
+const { createErrorResponse } = require('./response');
 
 const logger = require('./logger');
 const pino = require('pino-http')({
@@ -38,13 +41,8 @@ app.use('/', require('./routes'));
 
 // Add 404 middleware to handle any requests for resources that can't be found
 app.use((req, res) => {
-    res.status(404).json({
-        status: 'error',
-        error: {
-            message: 'not found',
-            code: 404,
-        },
-    });
+    let status = hsc.StatusCodes.NOT_FOUND;
+    res.status(status).json(createErrorResponse(status, hsc.getReasonPhrase(status)));
 });
 
 // Add error-handling middleware to deal with anything else
@@ -52,7 +50,7 @@ app.use((req, res) => {
 app.use((err, req, res, next) => {
     // We may already have an error response we can use, but if not, use a generic
     // 500 server error and message.
-    const status = err.status || 500;
+    const status = err.status || hsc.StatusCodes.INTERNAL_SERVER_ERROR;
     const message = err.message || 'unable to process request';
 
     // If this is a server error, log something so we can see what's going on.
@@ -60,13 +58,7 @@ app.use((err, req, res, next) => {
         logger.error({ err }, `Error processing request`);
     }
 
-    res.status(status).json({
-        status: 'error',
-        error: {
-            message,
-            code: status,
-        },
-    });
+    res.status(status).json(createErrorResponse(status, message));
 });
 
 // Export our `app` so we can access it in server.js
