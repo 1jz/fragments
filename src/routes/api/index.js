@@ -9,7 +9,7 @@ const express = require('express');
 const router = express.Router();
 
 // Define our first route, which will be: GET /v1/fragments
-router.get('/fragments', require('./get'));
+router.use('/fragments', require('./fragment'));
 
 // Other routes will go here later on...
 
