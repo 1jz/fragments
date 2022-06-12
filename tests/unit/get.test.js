@@ -1,29 +1,71 @@
 // tests/unit/get.test.js
 
 const request = require('supertest');
-const hsc = require('http-status-codes');
+const { StatusCodes } = require('http-status-codes');
 
 const app = require('../../src/app');
+const hash = require('../../src/hash');
+const { Fragment } = require('../../src/model/fragment');
+
+const user = {
+    name: 'user1@email.com',
+    pass: 'password1',
+};
 
 describe('GET /v1/fragments', () => {
     // If the request is missing the Authorization header, it should be forbidden
     test('unauthenticated requests are denied', () =>
-        request(app).get('/v1/fragments').expect(hsc.StatusCodes.UNAUTHORIZED));
+        request(app).get('/v1/fragments').expect(StatusCodes.UNAUTHORIZED));
 
     // If the wrong username/password pair are used (no such user), it should be forbidden
     test('incorrect credentials are denied', () =>
         request(app)
             .get('/v1/fragments')
             .auth('invalid@email.com', 'incorrect_password')
-            .expect(hsc.StatusCodes.UNAUTHORIZED));
+            .expect(StatusCodes.UNAUTHORIZED));
 
     // Using a valid username/password pair should give a success result with a .fragments array
     test('authenticated users get a fragments array', async () => {
-        const res = await request(app).get('/v1/fragments').auth('user1@email.com', 'password1');
-        expect(res.statusCode).toBe(hsc.StatusCodes.OK);
+        const res = await request(app).get('/v1/fragments').auth(user.name, user.pass);
+        expect(res.statusCode).toBe(StatusCodes.OK);
         expect(res.body.status).toBe('ok');
         expect(Array.isArray(res.body.fragments)).toBe(true);
     });
 
-    // TODO: we'll need to add tests to check the contents of the fragments array later
+    // Test if user's fragments are returned.
+    test('authenticated users get their fragments', async () => {
+        let fragment = new Fragment({ ownerId: hash(user.name), type: 'text/plain', size: 0 });
+        await fragment.save();
+        await fragment.setData('data');
+        const res = await request(app).get('/v1/fragments').auth(user.name, user.pass);
+        expect(res.statusCode).toBe(StatusCodes.OK);
+        expect(res.body.status).toBe('ok');
+        expect(Array.isArray(res.body.fragments)).toBe(true);
+        expect(res.body.fragments.includes(fragment.id)).toBe(true);
+    });
+
+    // Test if fragment data can be expanded.
+    test('authenticated users get their fragments', async () => {
+        const res = await request(app)
+            .get('/v1/fragments')
+            .query({ expand: true })
+            .auth(user.name, user.pass);
+        console.log(res.body);
+        expect(res.statusCode).toBe(StatusCodes.OK);
+        expect(res.body.status).toBe('ok');
+        expect(Array.isArray(res.body.fragments)).toBe(true);
+        expect('ownerId' in res.body.fragments[0]).toBe(true); // check if field from non-expanded list is included, more is redundant
+    });
+
+    // Test if user's fragments are returned.
+    test('get fragment text data from ID', async () => {
+        let fragment = new Fragment({ ownerId: hash(user.name), type: 'text/plain', size: 0 });
+        await fragment.save();
+        await fragment.setData('data');
+        const res = await request(app)
+            .get(`/v1/fragments/${fragment.id}`)
+            .auth(user.name, user.pass);
+        expect(res.statusCode).toBe(StatusCodes.OK);
+        expect(res.text).toBe('data');
+    });
 });

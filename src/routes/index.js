@@ -1,7 +1,7 @@
 // src/routes/index.js
 
 const express = require('express');
-const hsc = require('http-status-codes');
+const { StatusCodes } = require('http-status-codes');
 
 // version and author from package.json
 const { version, author } = require('../../package.json');
@@ -28,7 +28,7 @@ router.get('/', (req, res) => {
     // Client's shouldn't cache this response (always request it fresh)
     res.setHeader('Cache-Control', 'no-cache');
     // Send a 200 'OK' response
-    res.status(hsc.StatusCodes.OK).json(
+    res.status(StatusCodes.OK).json(
         createSuccessResponse({
             author,
             githubUrl: 'https://github.com/1jz/fragments',

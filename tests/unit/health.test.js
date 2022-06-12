@@ -1,7 +1,7 @@
 // tests/unit/health.test.js
 
 const request = require('supertest');
-const hsc = require('http-status-codes');
+const { StatusCodes } = require('http-status-codes');
 
 // Get our Express app object (we don't need the server part)
 const app = require('../../src/app');
@@ -12,7 +12,7 @@ const { version, author } = require('../../package.json');
 describe('/ health check', () => {
     test('should return HTTP 200 response', async () => {
         const res = await request(app).get('/');
-        expect(res.statusCode).toBe(hsc.StatusCodes.OK);
+        expect(res.statusCode).toBe(StatusCodes.OK);
     });
 
     test('should return Cache-Control: no-cache header', async () => {
