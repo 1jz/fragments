@@ -6,7 +6,6 @@ const express = require('express');
 const contentType = require('content-type');
 
 const { Fragment } = require('../../model/fragment');
-const logger = require('../../logger');
 
 // Support sending various Content-Types on the body up to 5M in size
 const rawBody = () =>
@@ -33,13 +32,21 @@ router.post('/', rawBody(), async (req, res, next) => {
         const fragment = new Fragment({ ownerId: ownerId, type: type });
         await fragment.save();
         await fragment.setData(body);
+        res.location(`/${fragment.id}`);
         res.status(StatusCodes.CREATED).json(
             createSuccessResponse({
                 fragment,
             })
         );
-    } catch (err) {
-        logger.error(err);
+    } catch (error) {
+        let err = new Error('', { cause: error });
+        if (error.params) {
+            err.message = 'no data provided';
+            err.status = StatusCodes.BAD_REQUEST;
+        } else {
+            err.message = error.message;
+            err.status = StatusCodes.BAD_REQUEST;
+        }
         next(err);
     }
 });

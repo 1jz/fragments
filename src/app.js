@@ -53,7 +53,6 @@ app.use((err, req, res, next) => {
     const status = err.status || StatusCodes.INTERNAL_SERVER_ERROR;
     const message = err.message || 'unable to process request';
 
-    console.log('3');
     // If this is a server error, log something so we can see what's going on.
     if (status > 499) {
         logger.error({ err }, `Error processing request`);

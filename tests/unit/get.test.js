@@ -50,7 +50,6 @@ describe('GET /v1/fragments', () => {
             .get('/v1/fragments')
             .query({ expand: true })
             .auth(user.name, user.pass);
-        console.log(res.body);
         expect(res.statusCode).toBe(StatusCodes.OK);
         expect(res.body.status).toBe('ok');
         expect(Array.isArray(res.body.fragments)).toBe(true);

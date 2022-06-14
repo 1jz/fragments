@@ -16,7 +16,7 @@ describe('Generic app tests', () => {
     // meh
     test('check error handler middleware', async () => {
         let res = await request(app).post('/v1/fragments').auth(user.name, user.pass).send('data');
-        expect(res.statusCode).toBe(StatusCodes.INTERNAL_SERVER_ERROR);
+        expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
         expect(res.body.status).toBe('error');
     });
 });

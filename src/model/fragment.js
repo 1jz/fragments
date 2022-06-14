@@ -72,7 +72,11 @@ class Fragment {
      */
     static async byId(ownerId, id) {
         let fragment = await readFragment(ownerId, id);
-        if (!fragment) throw new Error(`no data for ${ownerId}, ${id}`);
+        if (!fragment) {
+            let err = new Error('no data found');
+            err.params = { ownerId: ownerId, id: id };
+            throw err;
+        }
         return Promise.resolve(fragment);
     }
 
@@ -109,7 +113,11 @@ class Fragment {
      * @returns Promise
      */
     async setData(data) {
-        if (!data) throw new Error('no Buffer provided');
+        if (!data) {
+            let err = new Error('no Buffer provided');
+            err.params = { data: data };
+            throw err;
+        }
         this.size = Buffer.byteLength(data);
         this.updated = new Date().toISOString();
         return writeFragmentData(this.ownerId, this.id, data);
