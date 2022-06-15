@@ -40,4 +40,11 @@ describe('POST /v1/fragments', () => {
         expect(fragment.ownerId).toBe(hash(user.name));
         expect(fragment.size).toBe(data.length);
     });
+
+    // test error handler by leaving out content-type
+    test('test error handler for bad requests', async () => {
+        let res = await request(app).post('/v1/fragments').auth(user.name, user.pass).send('data');
+        expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
+        expect(res.body.status).toBe('error');
+    });
 });

@@ -67,4 +67,10 @@ describe('GET /v1/fragments', () => {
         expect(res.statusCode).toBe(StatusCodes.OK);
         expect(res.text).toBe('data');
     });
+
+    // Test if user's fragments are returned.
+    test('test error handler for false IDs', async () => {
+        const res = await request(app).get(`/v1/fragments/falseId`).auth(user.name, user.pass);
+        expect(res.statusCode).toBe(StatusCodes.NOT_FOUND);
+    });
 });

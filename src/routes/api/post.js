@@ -40,13 +40,8 @@ router.post('/', rawBody(), async (req, res, next) => {
         );
     } catch (error) {
         let err = new Error('', { cause: error });
-        if (error.params) {
-            err.message = 'no data provided';
-            err.status = StatusCodes.BAD_REQUEST;
-        } else {
-            err.message = error.message;
-            err.status = StatusCodes.BAD_REQUEST;
-        }
+        err.message = error.message;
+        err.status = StatusCodes.BAD_REQUEST;
         next(err);
     }
 });
