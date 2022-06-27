@@ -24,10 +24,6 @@ ENV NPM_CONFIG_COLOR=false
 # Use /app as our working directory
 WORKDIR /app
 
-# Switch to low privilege user
-USER node
-COPY --chown=node:node . /app
-
 # Copy the package.json and package-lock.json files into the working dir (/app)
 COPY package.json package-lock.json ./
 
@@ -39,6 +35,10 @@ COPY ./src ./src
 
 # Copy our HTPASSWD file
 COPY ./tests/.htpasswd ./tests/.htpasswd
+
+# Switch to low privilege user
+USER node
+COPY --chown=node:node . /app
 
 # Start the container by running our server
 CMD npm start
