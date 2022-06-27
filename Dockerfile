@@ -24,11 +24,15 @@ ENV NPM_CONFIG_COLOR=false
 # Use /app as our working directory
 WORKDIR /app
 
+# Switch to low privilege user
+USER node
+COPY --chown=node:node . /app
+
 # Copy the package.json and package-lock.json files into the working dir (/app)
 COPY package.json package-lock.json ./
 
 # Install node dependencies defined in package-lock.json
-RUN npm install
+RUN npm ci --only=production
 
 # Copy src to /app/src/
 COPY ./src ./src
