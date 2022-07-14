@@ -39,10 +39,8 @@ router.post('/', rawBody(), async (req, res, next) => {
             })
         );
     } catch (error) {
-        let err = new Error('', { cause: error });
-        err.message = error.message;
-        err.status = StatusCodes.BAD_REQUEST;
-        next(err);
+        error.status = StatusCodes.BAD_REQUEST;
+        next(error);
     }
 });
 

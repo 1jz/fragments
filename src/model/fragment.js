@@ -17,18 +17,39 @@ const {
 
 const validTypes = [
     `text/plain`,
+    `text/markdown`,
+    `text/html`,
+    `application/json`,
     /*
-   Currently, only text/plain is supported. Others will be added later.
-
-  `text/markdown`,
-  `text/html`,
-  `application/json`,
-  `image/png`,
-  `image/jpeg`,
-  `image/webp`,
-  `image/gif`,
-  */
+    to be added
+    `image/png`,
+    `image/jpeg`,
+    `image/webp`,
+    `image/gif`,
+    */
 ];
+
+const CONVERSION_LIST = {
+    'text/plain': ['txt'],
+    'text/markdown': ['md', 'html', 'txt'],
+    'text/html': ['html', 'txt'],
+    'application/json': ['json', 'txt'],
+    'image/png': ['png', 'jpg', 'webp', 'gif'],
+    'image/jpeg': ['png', 'jpg', 'webp', 'gif'],
+    'image/webp': ['png', 'jpg', 'webp', 'gif'],
+    'image/gif': ['png', 'jpg', 'webp', 'gif'],
+};
+
+const EXTENSION_TYPE_LIST = {
+    txt: 'text/plain',
+    md: 'text/markdown',
+    html: 'text/html',
+    json: 'application/json',
+    png: 'image/png',
+    jpg: 'image/jpeg',
+    webp: 'image/webp',
+    gif: 'image/gif',
+};
 
 class Fragment {
     constructor({ id, ownerId, created, updated, type, size = 0 }) {
@@ -73,8 +94,7 @@ class Fragment {
     static async byId(ownerId, id) {
         let fragment = await readFragment(ownerId, id);
         if (!fragment) {
-            let err = new Error('no data found');
-            err.params = { ownerId: ownerId, id: id };
+            let err = new Error(`Fragment [${id}] not found.`);
             throw err;
         }
         return Promise.resolve(fragment);
@@ -172,3 +192,5 @@ class Fragment {
 }
 
 module.exports.Fragment = Fragment;
+module.exports.EXTENSION_TYPE_LIST = EXTENSION_TYPE_LIST;
+module.exports.CONVERSION_LIST = CONVERSION_LIST;
