@@ -32,14 +32,15 @@ router.post('/', rawBody(), async (req, res, next) => {
         const fragment = new Fragment({ ownerId: ownerId, type: type });
         await fragment.save();
         await fragment.setData(body);
-        res.location(`/${fragment.id}`);
+        res.location(`http://${req.get('host')}${req.originalUrl}/${fragment.id}`);
         res.status(StatusCodes.CREATED).json(
             createSuccessResponse({
                 fragment,
             })
         );
     } catch (error) {
-        error.status = StatusCodes.BAD_REQUEST;
+        if (error.message === 'unsupported type') error.status = StatusCodes.UNSUPPORTED_MEDIA_TYPE;
+        else error.status = StatusCodes.BAD_REQUEST;
         next(error);
     }
 });

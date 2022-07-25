@@ -12,7 +12,8 @@
     "test": "jest -c jest.config.js --runInBand --",
     "test-w": "jest -c jest.config.js --maxWorkers=1 --",
     "coverage": "jest -c jest.config.js --runInBand --coverage",
-    "lint": "eslint --config .eslintrc.js src/** tests/**"
+    "lint": "eslint --config .eslintrc.js src/** tests/unit/**",
+    "test:integration": "hurl --test --glob \"tests/integration/**/*.hurl\""
   },
   "repository": {
     "type": "git",
@@ -25,6 +26,7 @@
   },
   "homepage": "https://github.com/1jz/fragments#readme",
   "devDependencies": {
+    "@orangeopensource/hurl": "^1.6.5",
     "eslint": "^8.15.0",
     "jest": "^28.1.0",
     "nodemon": "^2.0.16",

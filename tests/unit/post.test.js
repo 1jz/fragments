@@ -41,10 +41,26 @@ describe('POST /v1/fragments', () => {
         expect(fragment.size).toBe(data.length);
     });
 
+    test('authenticated users can add JSON fragments', async () => {
+        let data = '{"test":123}';
+        const res = await request(app)
+            .post('/v1/fragments')
+            .auth(user.name, user.pass)
+            .set('Content-Type', 'application/json')
+            .send(data);
+
+        let fragment = await Fragment.byId(res.body.fragment.ownerId, res.body.fragment.id);
+
+        expect(res.statusCode).toBe(StatusCodes.CREATED);
+        expect(res.body.status).toBe('ok');
+        expect(fragment.ownerId).toBe(hash(user.name));
+        expect(fragment.size).toBe(data.length);
+    });
+
     // test error handler by leaving out content-type
     test('test error handler for bad requests', async () => {
         let res = await request(app).post('/v1/fragments').auth(user.name, user.pass).send('data');
-        expect(res.statusCode).toBe(StatusCodes.BAD_REQUEST);
+        expect(res.statusCode).toBe(StatusCodes.UNSUPPORTED_MEDIA_TYPE);
         expect(res.body.status).toBe('error');
     });
 });
