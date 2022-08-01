@@ -1,7 +1,7 @@
 {
   "name": "fragments",
   "private": true,
-  "version": "0.9.0",
+  "version": "0.9.1",
   "description": "Microservice for documenting and managing fragments of information on automotive parts",
   "main": "index.js",
   "scripts": {
