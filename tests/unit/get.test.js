@@ -75,7 +75,7 @@ describe('GET /v1/fragments', () => {
         const res = await request(app)
             .get(`/v1/fragments/${fragment.id}/info`)
             .auth(user.name, user.pass);
-        expect('ownerId' in res.body).toBe(true);
+        expect('ownerId' in res.body['fragment']).toBe(true);
     });
 
     test('test conversion of json to text fragment', async () => {
