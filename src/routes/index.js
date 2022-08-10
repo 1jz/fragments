@@ -33,6 +33,7 @@ router.get('/', (req, res) => {
             author,
             githubUrl: 'https://github.com/1jz/fragments',
             version,
+            dynamo: process.env.AWS_DYNAMODB_TABLE_NAME,
         })
     );
 });

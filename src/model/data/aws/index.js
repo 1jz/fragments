@@ -177,8 +177,6 @@ async function deleteFragment(ownerId, id) {
 
     // Create a DELETE command to send to DynamoDB
     const dynamo_command = new DeleteCommand(dynamo_params);
-    console.log(dynamo_params);
-    console.log(dynamo_command);
 
     try {
         await s3Client.send(s3_command);
