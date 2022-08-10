@@ -84,9 +84,7 @@ jobs:
             - name: Wait for healthy servers
               run: sleep 30
             - name: Setup Local AWS Resources
-              run: chmod +x ./scripts/local-aws-setup.sh
-            - name: Wait for config setup
-              run: sleep 30
+              run: chmod +x ./scripts/local-aws-setup.sh & ./scripts/local-aws-setup.sh
             - name: Run Hurl Tests
               run: npm run test:integration
 
