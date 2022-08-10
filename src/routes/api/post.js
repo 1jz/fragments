@@ -30,8 +30,8 @@ router.post('/', rawBody(), async (req, res, next) => {
     let body = req.body;
     try {
         const fragment = new Fragment({ ownerId: ownerId, type: type });
-        await fragment.save();
         await fragment.setData(body);
+        await fragment.save();
         res.location(`http://${req.get('host')}${req.originalUrl}/${fragment.id}`);
         res.status(StatusCodes.CREATED).json(
             createSuccessResponse({

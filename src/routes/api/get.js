@@ -11,7 +11,7 @@ const getFragmentByID = async (req) => {
     try {
         let ownerId = req.user;
         let metadata = await Fragment.byId(ownerId, req.params.id);
-        let data = await metadata.getData();
+        let data = await Fragment.prototype.getData.call(metadata);
         return { metadata, data };
     } catch (error) {
         error.status = StatusCodes.NOT_FOUND;
@@ -82,7 +82,11 @@ router.get('/:id/info', async (req, res, next) => {
     try {
         let metadata = await getFragmentMetadataByID(req);
         res.setHeader('Content-Type', 'application/json');
-        res.status(StatusCodes.OK).send(metadata);
+        res.status(StatusCodes.OK).send(
+            createSuccessResponse({
+                fragment: metadata,
+            })
+        );
     } catch (error) {
         next(error);
     }
