@@ -17,6 +17,9 @@ router.use('/fragments', require('./post'));
 // DELETE /v1/fragments
 router.use('/fragments', require('./delete'));
 
+// PUT /v1/fragments
+router.use('/fragments', require('./put'));
+
 // Other routes will go here later on...
 
 module.exports = router;

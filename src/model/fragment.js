@@ -20,13 +20,10 @@ const validTypes = [
     `text/markdown`,
     `text/html`,
     `application/json`,
-    /*
-    to be added
     `image/png`,
     `image/jpeg`,
     `image/webp`,
     `image/gif`,
-    */
 ];
 
 const CONVERSION_LIST = {
